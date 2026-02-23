@@ -224,7 +224,7 @@ SSH 접속을 허가할 공개키 목록을 저장하는 파일입니다.
 
 ### Self-hosted Runner
 
-GitHub Actions 작업을 GitHub 클라우드가 아닌, 우리 서버(예: iMac Pro)에서 직접 실행하는 것입니다.
+GitHub Actions 작업을 GitHub 클라우드가 아닌, 자체 서버(예: Mac Mini, Mac Pro 등)에서 직접 실행하는 것입니다.
 
 **비유**: 세탁을 세탁소(GitHub 클라우드)에 맡기는 대신, 집에 세탁기(자체 서버)를 두고 직접 하는 것입니다.
 

@@ -27,7 +27,7 @@
 
 ## Claude Forge란?
 
-Claude Forge는 **Claude Code**를 기본 CLI에서 **완전한 개발 환경**으로 변환합니다. 설치 한 번으로 14개 전문 에이전트, 40개 슬래시 커맨드, 15개 스킬 워크플로우, 14개 자동화 훅, 8개 규칙 파일이 모두 연결됩니다.
+Claude Forge는 **Claude Code**를 기본 CLI에서 **완전한 개발 환경**으로 변환합니다. 설치 한 번으로 11개 전문 에이전트, 36개 슬래시 커맨드, 15개 스킬 워크플로우, 14개 자동화 훅, 8개 규칙 파일이 모두 연결됩니다.
 
 > oh-my-zsh가 터미널을 강화하듯, Claude Forge는 AI 코딩 어시스턴트를 **파워 유저 도구**로 업그레이드합니다.
 
@@ -59,8 +59,8 @@ claude
 
 | 카테고리 | 수량 | 주요 항목 |
 |:--------:|:----:|:----------|
-| **에이전트** | 14+2 | `planner` `architect` `code-reviewer` `security-reviewer` `tdd-guide` `database-reviewer` `web-designer` + 옵션 2개 |
-| **커맨드** | 40 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/security-review` ... |
+| **에이전트** | 11 | `planner` `architect` `code-reviewer` `security-reviewer` `tdd-guide` `database-reviewer` `build-error-resolver` ... |
+| **커맨드** | 36 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/security-review` ... |
 | **스킬** | 15 | `build-system` `security-pipeline` `eval-harness` `team-orchestrator` `session-wrap` ... |
 | **훅** | 14 | 보안 방어, MCP 속도 제한, 시크릿 필터링, 작업 추적, 코드 품질 |
 | **규칙** | 8 | `coding-style` `security` `git-workflow` `golden-principles` `agent-orchestration` ... |
@@ -73,8 +73,8 @@ claude
 ```mermaid
 graph TB
     subgraph REPO["claude-forge (git 리포)"]
-        A["agents/ (14+2)"]
-        C["commands/ (40)"]
+        A["agents/ (11)"]
+        C["commands/ (36)"]
         S["skills/ (15)"]
         H["hooks/ (14)"]
         R["rules/ (8)"]
@@ -145,24 +145,6 @@ claude-forge/
 ---
 
 ## 🔑 핵심 기능
-
-### 크로스 모델 리뷰 파이프라인 (옵션)
-
-<p align="center">
-  <img src="docs/cross-model-review.png" alt="크로스 모델 리뷰 파이프라인" width="720">
-</p>
-
-Claude의 기본 코드 리뷰에 **추가 AI 관점**을 확장할 수 있습니다:
-
-| 리뷰어 | 엔진 | 초점 | 설정 |
-|:-------|:-----|:-----|:-----|
-| **Code Reviewer** | Claude (기본 탑재) | 품질, 패턴, 버그 | 포함됨 |
-| **Codex Reviewer** | OpenAI Codex | 세컨드 오피니언, 대안 | `agents/optional/` |
-| **Gemini Reviewer** | Google Gemini 3 Pro | 프론트엔드, UI/UX | `agents/optional/` |
-
-기본 코드 리뷰어는 바로 사용 가능합니다. Codex와 Gemini 리뷰어는 `agents/optional/`에 있으며, `agents/`로 복사하고 각 CLI를 설치하면 크로스 모델 리뷰가 활성화됩니다.
-
----
 
 ### 보안 방어 훅
 

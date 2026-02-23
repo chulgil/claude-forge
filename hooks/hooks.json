@@ -1,84 +1,13 @@
 {
-  "_comment": "참조 문서 전용. Claude Code는 별도 hooks.json을 지원하지 않음. 실제 hooks 설정은 settings.json 내에 유지해야 함.",
+  "_comment": "Reference document only. Claude Code does not support a separate hooks.json. Actual hook settings must be in settings.json.",
   "PreToolUse": [
     {
       "matcher": "Bash",
       "hooks": [
         {
           "type": "command",
-          "command": "~/.claude/hooks/supabase-mcp-reminder.sh"
-        }
-      ]
-    },
-    {
-      "matcher": "mcp__gmail__send_email",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/email-guard.sh"
-        }
-      ]
-    },
-    {
-      "matcher": "mcp__supabase__execute_sql",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/db-guard.sh"
-        }
-      ]
-    },
-    {
-      "matcher": "mcp__supabase__apply_migration",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/db-guard.sh"
-        }
-      ]
-    },
-    {
-      "matcher": "mcp__meta-ads__*",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/ads-guard.sh"
-        }
-      ]
-    },
-    {
-      "matcher": "mcp__google-ads-mcp__*",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/ads-guard.sh"
-        }
-      ]
-    },
-    {
-      "matcher": "mcp__hyperbrowser__browser_use_agent",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/expensive-mcp-warning.sh"
-        }
-      ]
-    },
-    {
-      "matcher": "mcp__playwright__browser_run_code",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/expensive-mcp-warning.sh"
-        }
-      ]
-    },
-    {
-      "matcher": "mcp__google-calendar__create-event",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/calendar-guard.sh"
+          "command": "~/.claude/hooks/remote-command-guard.sh",
+          "timeout": 5000
         }
       ]
     },
@@ -87,7 +16,22 @@
       "hooks": [
         {
           "type": "command",
+          "command": "~/.claude/hooks/rate-limiter.sh",
+          "timeout": 5000
+        },
+        {
+          "type": "command",
           "command": "~/.claude/hooks/mcp-usage-tracker.sh"
+        }
+      ]
+    }
+  ],
+  "SessionStart": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "~/.claude/hooks/context-sync-suggest.sh"
         }
       ]
     }
@@ -108,6 +52,24 @@
         {
           "type": "command",
           "command": "~/.claude/hooks/work-tracker-tool.sh"
+        },
+        {
+          "type": "command",
+          "command": "~/.claude/hooks/output-secret-filter.sh",
+          "timeout": 5000
+        }
+      ]
+    },
+    {
+      "matcher": "Edit|Write",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "~/.claude/hooks/code-quality-reminder.sh"
+        },
+        {
+          "type": "command",
+          "command": "~/.claude/hooks/security-auto-trigger.sh"
         }
       ]
     }
@@ -120,6 +82,14 @@
           "command": "~/.claude/hooks/work-tracker-stop.sh"
         }
       ]
+    },
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "~/.claude/hooks/session-wrap-suggest.sh"
+        }
+      ]
     }
   ],
   "TaskCompleted": [
@@ -129,18 +99,6 @@
         {
           "type": "command",
           "command": "~/.claude/hooks/task-completed.sh",
-          "timeout": 10000
-        }
-      ]
-    }
-  ],
-  "TeammateIdle": [
-    {
-      "matcher": "",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "~/.claude/hooks/teammate-idle.sh",
           "timeout": 10000
         }
       ]

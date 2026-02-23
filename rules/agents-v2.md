@@ -22,24 +22,6 @@ Located in `~/.claude/agents/`:
 | doc-updater | Documentation | sonnet | Updating docs |
 | database-reviewer | PostgreSQL/Supabase DB | opus | Schema, query optimization |
 | verify-agent | Fresh-context 검증 | sonnet | /handoff-verify 서브에이전트 |
-| web-designer | 웹 디자인 워크플로우 | sonnet | 랜딩페이지, UI 디자인 |
-
-
-### 유틸리티 에이전트
-
-| Agent | Purpose | Model | When to Use |
-|-------|---------|-------|-------------|
-| knowledge-builder | 논문/아티클/유튜브 요약 및 지식 누적 | sonnet | 요약, 논문, 아티클 |
-| researcher | 웹 리서치 + 팩트체크 | sonnet | 정보 수집, 기술 조사 |
-
-### Optional 에이전트 (agents/optional/)
-
-Cross-Model Review Pipeline용. 외부 CLI + 유료 구독 필요:
-
-| Agent | Purpose | Requirement |
-|-------|---------|-------------|
-| codex-reviewer | OpenAI Codex 기반 세컨드 오피니언 | ChatGPT 구독 + `codex` CLI |
-| gemini-reviewer | Gemini 3 Pro 프론트엔드 리뷰 | Google 구독 + `gemini` CLI |
 
 ## Immediate Agent Usage
 

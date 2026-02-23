@@ -27,7 +27,7 @@
 
 ## What is Claude Forge?
 
-Claude Forge transforms **Claude Code** from a basic CLI into a **full-featured development environment**. One install gives you 14 specialized agents, 40 slash commands, 15 skill workflows, 14 automation hooks, and 8 rule files -- all pre-wired and ready to go.
+Claude Forge transforms **Claude Code** from a basic CLI into a **full-featured development environment**. One install gives you 11 specialized agents, 36 slash commands, 15 skill workflows, 14 automation hooks, and 8 rule files -- all pre-wired and ready to go.
 
 > Think of it as a **power-user starter kit** for Claude Code: the same way oh-my-zsh enhances your terminal, Claude Forge supercharges your AI coding assistant.
 
@@ -59,8 +59,8 @@ That's it. All agents, commands, hooks, and rules are instantly available.
 
 | Category | Count | Highlights |
 |:--------:|:-----:|:-----------|
-| **Agents** | 14+2 | `planner` `architect` `code-reviewer` `security-reviewer` `tdd-guide` `database-reviewer` `web-designer` + 2 optional |
-| **Commands** | 40 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/security-review` ... |
+| **Agents** | 11 | `planner` `architect` `code-reviewer` `security-reviewer` `tdd-guide` `database-reviewer` `build-error-resolver` ... |
+| **Commands** | 36 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/security-review` ... |
 | **Skills** | 15 | `build-system` `security-pipeline` `eval-harness` `team-orchestrator` `session-wrap` ... |
 | **Hooks** | 14 | Security defense, MCP rate limiting, secret filtering, work tracking, code quality |
 | **Rules** | 8 | `coding-style` `security` `git-workflow` `golden-principles` `agent-orchestration` ... |
@@ -73,8 +73,8 @@ That's it. All agents, commands, hooks, and rules are instantly available.
 ```mermaid
 graph TB
     subgraph REPO["claude-forge (git repo)"]
-        A["agents/ (14+2)"]
-        C["commands/ (40)"]
+        A["agents/ (11)"]
+        C["commands/ (36)"]
         S["skills/ (15)"]
         H["hooks/ (14)"]
         R["rules/ (8)"]
@@ -145,24 +145,6 @@ claude-forge/
 ---
 
 ## 🔑 Key Features
-
-### Cross-Model Review Pipeline (Optional)
-
-<p align="center">
-  <img src="docs/cross-model-review.png" alt="Cross-Model Review Pipeline" width="720">
-</p>
-
-Extend Claude's native code review with **additional AI perspectives**:
-
-| Reviewer | Engine | Focus | Setup |
-|:---------|:-------|:------|:------|
-| **Code Reviewer** | Claude (built-in) | Quality, patterns, bugs | Included |
-| **Codex Reviewer** | OpenAI Codex | Second opinion, alternatives | `agents/optional/` |
-| **Gemini Reviewer** | Google Gemini 3 Pro | Frontend, UI/UX patterns | `agents/optional/` |
-
-The built-in code reviewer works out of the box. Codex and Gemini reviewers are in `agents/optional/` -- copy them to `agents/` and install the respective CLIs to enable cross-model review.
-
----
 
 ### Security Defense Hooks
 

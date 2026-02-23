@@ -315,15 +315,15 @@ install_claude_config() {
     echo ""
     echo -e "${BLUE}[7/9] Claude Code 설정 파일 설치...${NC}"
 
-    local config_dir="$HOME/claude-code-config"
+    local config_dir="$HOME/claude-forge"
 
     if [[ -d "$config_dir" ]]; then
         echo "  install.sh 실행 중..."
         bash "$config_dir/install.sh"
     else
         echo -e "  ${YELLOW}!${NC} 설정 저장소를 먼저 클론하세요:"
-        echo "    git clone <repo-url> ~/claude-code-config"
-        echo "    ~/claude-code-config/install.sh"
+        echo "    git clone <repo-url> ~/claude-forge"
+        echo "    ~/claude-forge/install.sh"
     fi
 }
 

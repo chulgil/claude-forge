@@ -35,72 +35,12 @@
       "ReadMcpResourceTool(*)",
       "mcp__context7__*",
       "mcp__exa__*",
-      "mcp__youtube-transcript__*",
       "mcp__memory__*",
-      "mcp__desktop-commander__*",
-      "mcp__coingecko__*",
-      "mcp__korea-stock__*",
-      "mcp__remotion__*",
-      "mcp__supabase__search_docs",
-      "mcp__supabase__list_tables",
-      "mcp__supabase__list_extensions",
-      "mcp__supabase__list_migrations",
-      "mcp__supabase__get_logs",
-      "mcp__supabase__get_advisors",
-      "mcp__supabase__get_project_url",
-      "mcp__supabase__get_publishable_keys",
-      "mcp__supabase__generate_typescript_types",
-      "mcp__supabase__list_edge_functions",
-      "mcp__supabase__get_edge_function",
-      "mcp__analytics-mcp__*",
-      "mcp__data-go-nts__*",
-      "mcp__data-go-pps__*",
-      "mcp__data-go-fsc__*",
-      "mcp__data-go-msds__*",
-      "mcp__github__get_file_contents",
-      "mcp__github__search_repositories",
-      "mcp__github__search_code",
-      "mcp__github__list_issues",
-      "mcp__github__get_issue",
-      "mcp__github__list_commits",
-      "mcp__github__get_pull_request",
-      "mcp__github__list_pull_requests",
-      "mcp__coingecko__*",
-      "mcp__korea-stock__*",
-      "mcp__gmail__search_emails",
-      "mcp__gmail__read_email",
-      "mcp__google-calendar__list-events",
-      "mcp__google-calendar__search-events",
-      "mcp__gmail__draft_email",
-      "mcp__google-calendar__create-event",
-      "mcp__supabase__execute_sql",
-      "mcp__supabase__apply_migration",
-      "mcp__supabase__deploy_edge_function",
-      "mcp__supabase__create_branch",
-      "mcp__supabase__list_branches",
-      "mcp__supabase__delete_branch",
-      "mcp__supabase__merge_branch",
-      "mcp__supabase__reset_branch",
-      "mcp__supabase__rebase_branch",
-      "mcp__n8n-mcp__list_workflows",
-      "mcp__n8n-mcp__get_workflow",
-      "mcp__desktop-commander__read_file",
-      "mcp__desktop-commander__list_directory",
-      "mcp__desktop-commander__list_processes",
-      "mcp__playwright__*",
-      "mcp__hyperbrowser__scrape_webpage",
-      "mcp__hyperbrowser__crawl_webpages",
-      "mcp__hyperbrowser__extract_structured_data",
-      "mcp__hyperbrowser__search_with_bing",
-      "mcp__hyperbrowser__create_profile",
-      "mcp__hyperbrowser__delete_profile",
-      "mcp__hyperbrowser__list_profiles",
-      "mcp__stitch__*",
+      "mcp__github__*",
       "mcp__fetch__*",
       "mcp__jina-reader__*"
     ],
     "deny": [
-      "mcp__gmail__send_email",
       "WebFetch",
       "WebFetch(*)",
       "Bash(rm -rf /)*",
@@ -156,84 +96,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/supabase-mcp-reminder.sh"
-          },
-          {
-            "type": "command",
             "command": "~/.claude/hooks/remote-command-guard.sh",
             "timeout": 5000
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__gmail__send_email",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/email-guard.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__supabase__execute_sql",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/db-guard.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__supabase__apply_migration",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/db-guard.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__meta-ads__*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/ads-guard.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__google-ads-mcp__*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/ads-guard.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__hyperbrowser__browser_use_agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/expensive-mcp-warning.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__playwright__browser_run_code",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/expensive-mcp-warning.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__google-calendar__create-event",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/calendar-guard.sh"
           }
         ]
       },
@@ -313,24 +177,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/codex-collector.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/gemini-collector.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
             "command": "~/.claude/hooks/security-auto-trigger.sh"
           }
         ]
@@ -342,24 +188,6 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/work-tracker-stop.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/codex-auto-review.sh",
-            "timeout": 120000
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/gemini-auto-review.sh",
-            "timeout": 120000
           }
         ]
       },
@@ -383,23 +211,10 @@
           }
         ]
       }
-    ],
-    "TeammateIdle": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/teammate-idle.sh",
-            "timeout": 10000
-          }
-        ]
-      }
     ]
   },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/cc-chips-custom/engine.sh"
-  },
-  "teammateMode": "tmux"
+  }
 }
