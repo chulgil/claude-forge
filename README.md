@@ -1,32 +1,39 @@
-<p align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/banner.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/banner-light.png">
   <img src="docs/banner.png" alt="Claude Forge" width="100%">
-</p>
-
-<h1 align="center">Claude Forge</h1>
+</picture>
 
 <p align="center">
   <strong>Production-grade configuration framework for Claude Code</strong>
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
-  <a href="https://claude.com/claude-code"><img src="https://img.shields.io/badge/Claude%20Code-%E2%89%A51.0-blueviolet" alt="Claude Code"></a>
-  <img src="https://img.shields.io/badge/agents-23-green" alt="23 Agents">
-  <img src="https://img.shields.io/badge/commands-79-orange" alt="79 Commands">
-  <img src="https://img.shields.io/badge/hooks-23-red" alt="23 Hooks">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-blue?style=for-the-badge" alt="MIT License"></a>
+  <a href="https://claude.com/claude-code"><img src="https://img.shields.io/badge/CLAUDE_CODE-%E2%89%A51.0-blueviolet?style=for-the-badge" alt="Claude Code"></a>
+  <a href="https://github.com/sangrokjung/claude-forge/stargazers"><img src="https://img.shields.io/github/stars/sangrokjung/claude-forge?style=for-the-badge&color=yellow" alt="Stars"></a>
+</p>
+
+<p align="center">
+  <a href="#-quick-start">Quick Start</a> &bull;
+  <a href="#-whats-inside">What's Inside</a> &bull;
+  <a href="#-architecture">Architecture</a> &bull;
+  <a href="#-key-features">Key Features</a> &bull;
+  <a href="#-customization">Customization</a> &bull;
+  <a href="README.ko.md">한국어</a>
 </p>
 
 ---
 
 ## What is Claude Forge?
 
-Claude Forge is a batteries-included configuration framework that transforms Claude Code from a basic CLI into a full-featured development environment. It ships 23 specialized agents, 79 slash commands, 21 skill workflows, 23 security/automation hooks, and 10 rule files -- all wired together with a one-command installer.
+Claude Forge transforms **Claude Code** from a basic CLI into a **full-featured development environment**. One install gives you 23 specialized agents, 79 slash commands, 21 skill workflows, 23 security hooks, and 10 rule files -- all pre-wired and ready to go.
 
-> [Korean README (한국어)](README.ko.md)
+> Think of it as a **power-user starter kit** for Claude Code: the same way oh-my-zsh enhances your terminal, Claude Forge supercharges your AI coding assistant.
 
 ---
 
-## Quick Start
+## ⚡ Quick Start
 
 ```bash
 # 1. Clone
@@ -40,118 +47,73 @@ cd claude-forge
 claude
 ```
 
+That's it. All agents, commands, hooks, and rules are instantly available.
+
 ---
 
-## Features
+## 📦 What's Inside
+
+<p align="center">
+  <img src="docs/features-grid.png" alt="Claude Forge Features" width="720">
+</p>
 
 | Category | Count | Highlights |
-|----------|-------|------------|
-| **Agents** | 23 | planner, architect, code-reviewer, security-reviewer, tdd-guide, database-reviewer, web-designer, codex-reviewer, gemini-reviewer, ... |
-| **Commands** | 79 | `/commit-push-pr`, `/handoff-verify`, `/explore`, `/tdd`, `/plan`, `/orchestrate`, `/generate-image`, ... |
-| **Skills** | 21 | build-system, security-pipeline, eval-harness, team-orchestrator, session-wrap, ... |
+|:--------:|:-----:|:-----------|
+| **Agents** | 23 | `planner` `architect` `code-reviewer` `security-reviewer` `tdd-guide` `database-reviewer` `web-designer` `codex-reviewer` `gemini-reviewer` ... |
+| **Commands** | 79 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/generate-image` ... |
+| **Skills** | 21 | `build-system` `security-pipeline` `eval-harness` `team-orchestrator` `session-wrap` ... |
 | **Hooks** | 23 | 7-layer security defense, cross-model auto-review, MCP rate limiting, secret filtering |
-| **Rules** | 10 | coding-style, security, git-workflow, golden-principles, agent orchestration, ... |
-| **MCP Servers** | 9 | context7, memory, exa, gmail, github, fetch, jina-reader, desktop-commander, coingecko |
+| **Rules** | 10 | `coding-style` `security` `git-workflow` `golden-principles` `agent-orchestration` ... |
+| **MCP Servers** | 9 | `context7` `memory` `exa` `gmail` `github` `fetch` `jina-reader` `desktop-commander` `coingecko` |
 
 ---
 
-## Architecture
+## 🏗 Architecture
 
-```
-~/.claude/                      (symlinked by install.sh)
-  ├── agents/                   23 specialized agent definitions
-  ├── commands/                 79 slash commands
-  ├── skills/                   21 multi-step workflows
-  ├── hooks/                    23 event-driven scripts
-  ├── rules/                    10 auto-loaded rule files
-  ├── scripts/                  Utilities (md-to-docx, pdf-enhance)
-  ├── cc-chips/                 CC CHIPS status bar (submodule)
-  ├── cc-chips-custom/          Custom status bar overlay
-  ├── knowledge/                Knowledge base
-  ├── reference/                Reference documentation
-  ├── setup/                    Installation guides
-  └── settings.json             Permissions, hooks, env config
+```mermaid
+graph TB
+    subgraph REPO["claude-forge (git repo)"]
+        A["agents/ (23)"]
+        C["commands/ (79)"]
+        S["skills/ (21)"]
+        H["hooks/ (23)"]
+        R["rules/ (10)"]
+        SC["scripts/"]
+        CC["cc-chips/"]
+        K["knowledge/"]
+        REF["reference/"]
+        SET["settings.json"]
+    end
+
+    INSTALL["./install.sh"]
+    REPO --> INSTALL
+
+    subgraph HOME["~/.claude/ (symlinked)"]
+        HA["agents/"]
+        HC["commands/"]
+        HS["skills/"]
+        HH["hooks/"]
+        HR["rules/"]
+        HSC["scripts/"]
+        HCC["cc-chips/"]
+        HSET["settings.json"]
+    end
+
+    INSTALL -->|symlink| HOME
+
+    CLAUDE["claude (CLI)"]
+    HOME --> CLAUDE
+
+    style REPO fill:#1a1a2e,stroke:#e94560,color:#fff
+    style HOME fill:#0f3460,stroke:#16213e,color:#fff
+    style INSTALL fill:#e94560,stroke:#fff,color:#fff
+    style CLAUDE fill:#533483,stroke:#fff,color:#fff
 ```
 
 The installer creates **symlinks** from the repo to `~/.claude/`, so updates are instant via `git pull`.
 
----
-
-## Key Features
-
-### Cross-Model Review Pipeline
-
-Automatic code review with multiple AI models for diverse perspectives:
-
-- **Codex Reviewer**: OpenAI Codex-based second opinion on code changes
-- **Gemini Reviewer**: Google Gemini 3 Pro frontend-focused review
-- **Code Reviewer**: Claude-native comprehensive review
-
-All three run automatically via PostToolUse hooks when files are edited.
-
-### Security Hooks (7-Layer Defense)
-
-| Layer | Hook | Trigger |
-|-------|------|---------|
-| 1 | `output-secret-filter.sh` | Every tool output |
-| 2 | `remote-command-guard.sh` | Bash commands |
-| 3 | `db-guard.sh` | SQL execution |
-| 4 | `email-guard.sh` | Email sending |
-| 5 | `ads-guard.sh` | Ad platform operations |
-| 6 | `calendar-guard.sh` | Calendar modifications |
-| 7 | `security-auto-trigger.sh` | Code changes |
-
-### CC CHIPS Status Bar
-
-Real-time status line showing model, session ID, token usage, and MCP stats. Powered by [CC CHIPS](https://github.com/roger-me/CC-CHIPS) with custom overlay.
-
-### Agent Teams Support
-
-Multi-agent collaboration with:
-- Hub-and-spoke communication (leader coordinates)
-- File ownership separation (no conflicts)
-- Phase-based team rotation
-- Decisions externalized to `decisions.md`
-
----
-
-## Customization
-
-Override any setting without modifying tracked files:
-
-```bash
-# Create your local overrides (git-ignored)
-cp setup/settings.local.template.json ~/.claude/settings.local.json
-
-# Edit with your secrets/preferences
-vim ~/.claude/settings.local.json
-```
-
-`settings.local.json` is merged on top of `settings.json` by Claude Code.
-
----
-
-## MCP Servers
-
-Pre-configured in `mcp-servers.json`:
-
-| Server | Purpose |
-|--------|---------|
-| context7 | Real-time library documentation |
-| memory | Persistent knowledge graph |
-| exa | AI-powered web search |
-| gmail | Email management |
-| github | Repository/PR/issue management |
-| fetch | Web content fetching |
-| jina-reader | URL-to-markdown conversion |
-| desktop-commander | Desktop file/terminal operations |
-| coingecko | Cryptocurrency market data |
-
-Install via `./install.sh` or manually with `claude mcp add`.
-
----
-
-## Project Structure
+<details>
+<summary><strong>Full Directory Tree</strong></summary>
 
 ```
 claude-forge/
@@ -178,14 +140,167 @@ claude-forge/
   └── LICENSE               MIT License
 ```
 
+</details>
+
 ---
 
-## Contributing
+## 🔑 Key Features
+
+### Cross-Model Review Pipeline
+
+<p align="center">
+  <img src="docs/cross-model-review.png" alt="Cross-Model Review Pipeline" width="720">
+</p>
+
+Every file edit triggers **three independent AI reviewers** via PostToolUse hooks:
+
+| Reviewer | Engine | Focus |
+|:---------|:-------|:------|
+| **Code Reviewer** | Claude (native) | Comprehensive quality, patterns, bugs |
+| **Codex Reviewer** | OpenAI Codex | Second opinion, alternative approaches |
+| **Gemini Reviewer** | Google Gemini 3 Pro | Frontend-focused, UI/UX patterns |
+
+Three perspectives, zero manual setup. Disagreements surface real issues.
+
+---
+
+### 7-Layer Security Defense
+
+<p align="center">
+  <img src="docs/security-layers.png" alt="7-Layer Security Defense" width="720">
+</p>
+
+Every action passes through layered security hooks:
+
+| Layer | Hook | Protects Against |
+|:-----:|:-----|:-----------------|
+| 1 | `output-secret-filter.sh` | Leaked API keys, tokens in output |
+| 2 | `remote-command-guard.sh` | Unsafe remote commands |
+| 3 | `db-guard.sh` | Destructive SQL (DROP, TRUNCATE) |
+| 4 | `email-guard.sh` | Unauthorized email sending |
+| 5 | `ads-guard.sh` | Unintended ad platform changes |
+| 6 | `calendar-guard.sh` | Unauthorized calendar modifications |
+| 7 | `security-auto-trigger.sh` | Vulnerabilities in code changes |
+
+---
+
+### Agent Teams
+
+Multi-agent collaboration for complex tasks:
+
+```mermaid
+graph LR
+    L["Team Leader"]
+    A1["Agent 1<br/><small>Frontend</small>"]
+    A2["Agent 2<br/><small>Backend</small>"]
+    A3["Agent 3<br/><small>Testing</small>"]
+
+    L <-->|coordinate| A1
+    L <-->|coordinate| A2
+    L <-->|coordinate| A3
+
+    style L fill:#e94560,stroke:#fff,color:#fff
+    style A1 fill:#0f3460,stroke:#fff,color:#fff
+    style A2 fill:#0f3460,stroke:#fff,color:#fff
+    style A3 fill:#0f3460,stroke:#fff,color:#fff
+```
+
+- **Hub-and-spoke** communication (leader coordinates)
+- **File ownership** separation (no merge conflicts)
+- **Phase-based** team rotation
+- Decisions externalized to `decisions.md`
+
+---
+
+### CC CHIPS Status Bar
+
+Real-time status line showing model, session ID, token usage, and MCP stats.
+Powered by [CC CHIPS](https://github.com/roger-me/CC-CHIPS) with custom overlay.
+
+---
+
+## 🔌 MCP Servers
+
+Pre-configured in `mcp-servers.json` -- install via `./install.sh` or `claude mcp add`:
+
+| Server | Purpose |
+|:-------|:--------|
+| **context7** | Real-time library documentation |
+| **memory** | Persistent knowledge graph |
+| **exa** | AI-powered web search |
+| **gmail** | Email management |
+| **github** | Repository / PR / issue management |
+| **fetch** | Web content fetching |
+| **jina-reader** | URL-to-markdown conversion |
+| **desktop-commander** | Desktop file & terminal operations |
+| **coingecko** | Cryptocurrency market data |
+
+---
+
+## 🎨 Customization
+
+Override any setting without modifying tracked files:
+
+```bash
+# Create your local overrides (git-ignored)
+cp setup/settings.local.template.json ~/.claude/settings.local.json
+
+# Edit with your secrets/preferences
+vim ~/.claude/settings.local.json
+```
+
+`settings.local.json` is merged on top of `settings.json` by Claude Code.
+
+<details>
+<summary><strong>Adding Your Own Agents</strong></summary>
+
+Create a markdown file in `agents/`:
+
+```markdown
+# my-agent.md
+
+Your agent instructions here.
+Describe the agent's role, available tools, and behavioral rules.
+```
+
+The agent becomes available immediately as a Task subagent type.
+
+</details>
+
+<details>
+<summary><strong>Adding Slash Commands</strong></summary>
+
+Create a markdown file in `commands/`:
+
+```markdown
+# my-command.md
+
+Instructions for what the command should do when invoked with /my-command.
+```
+
+</details>
+
+<details>
+<summary><strong>Adding Security Hooks</strong></summary>
+
+Create a shell script in `hooks/` and register it in `settings.json`:
+
+```bash
+#!/bin/bash
+# hooks/my-guard.sh
+# Runs on specific tool events (PreToolUse, PostToolUse, etc.)
+```
+
+</details>
+
+---
+
+## 🤝 Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding agents, commands, skills, and hooks.
 
 ---
 
-## License
+## 📄 License
 
 [MIT](LICENSE) -- use it, fork it, build on it.
