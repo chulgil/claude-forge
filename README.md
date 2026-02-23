@@ -60,7 +60,7 @@ That's it. All agents, commands, hooks, and rules are instantly available.
 | Category | Count | Highlights |
 |:--------:|:-----:|:-----------|
 | **Agents** | 23 | `planner` `architect` `code-reviewer` `security-reviewer` `tdd-guide` `database-reviewer` `web-designer` `codex-reviewer` `gemini-reviewer` ... |
-| **Commands** | 79 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/generate-image` ... |
+| **Commands** | 40 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/security-review` ... |
 | **Skills** | 21 | `build-system` `security-pipeline` `eval-harness` `team-orchestrator` `session-wrap` ... |
 | **Hooks** | 23 | 7-layer security defense, cross-model auto-review, MCP rate limiting, secret filtering |
 | **Rules** | 10 | `coding-style` `security` `git-workflow` `golden-principles` `agent-orchestration` ... |

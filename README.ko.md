@@ -60,7 +60,7 @@ claude
 | 카테고리 | 수량 | 주요 항목 |
 |:--------:|:----:|:----------|
 | **에이전트** | 23 | `planner` `architect` `code-reviewer` `security-reviewer` `tdd-guide` `database-reviewer` `web-designer` `codex-reviewer` `gemini-reviewer` ... |
-| **커맨드** | 79 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/generate-image` ... |
+| **커맨드** | 40 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/security-review` ... |
 | **스킬** | 21 | `build-system` `security-pipeline` `eval-harness` `team-orchestrator` `session-wrap` ... |
 | **훅** | 23 | 7단계 보안 방어, 크로스 모델 자동 리뷰, MCP 속도 제한, 시크릿 필터링 |
 | **규칙** | 10 | `coding-style` `security` `git-workflow` `golden-principles` `agent-orchestration` ... |
