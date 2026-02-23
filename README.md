@@ -1,9 +1,20 @@
-# Claude Forge
+<p align="center">
+  <img src="docs/banner.png" alt="Claude Forge" width="100%">
+</p>
 
-**Production-grade configuration framework for Claude Code**
+<h1 align="center">Claude Forge</h1>
 
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A51.0-blueviolet)](https://claude.com/claude-code)
+<p align="center">
+  <strong>Production-grade configuration framework for Claude Code</strong>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://claude.com/claude-code"><img src="https://img.shields.io/badge/Claude%20Code-%E2%89%A51.0-blueviolet" alt="Claude Code"></a>
+  <img src="https://img.shields.io/badge/agents-23-green" alt="23 Agents">
+  <img src="https://img.shields.io/badge/commands-79-orange" alt="79 Commands">
+  <img src="https://img.shields.io/badge/hooks-23-red" alt="23 Hooks">
+</p>
 
 ---
 
