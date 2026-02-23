@@ -1,7 +1,7 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/banner.png">
-  <source media="(prefers-color-scheme: light)" srcset="docs/banner-light.png">
-  <img src="docs/banner.png" alt="Claude Forge" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/banner.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/banner-light.jpg">
+  <img src="docs/banner.jpg" alt="Claude Forge" width="100%">
 </picture>
 
 <p align="center">
