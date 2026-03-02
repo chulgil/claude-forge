@@ -62,7 +62,7 @@ If you're new to development or Claude Code, start with these:
 | Step | What to do |
 |:-----|:-----------|
 | 1 | Run `/guide` after install -- an interactive 3-minute tour |
-| 2 | Read [First Steps](docs/FIRST-STEPS.md) -- glossary + TOP 5 commands |
+| 2 | Read [First Steps](docs/FIRST-STEPS.md) -- glossary + TOP 6 commands |
 | 3 | Browse [Workflow Recipes](docs/WORKFLOW-RECIPES.md) -- 5 copy-paste scenarios |
 
 Or just type `/auto login page` and let Claude Forge handle the entire plan-to-PR pipeline for you.
@@ -82,7 +82,7 @@ Real-world workflows that chain commands, agents, and skills together.
 Build new features with a plan-first, test-first approach:
 
 ```
-/plan → /tdd → /code-review → /handoff-verify → /commit-push-pr
+/plan → /tdd → /code-review → /handoff-verify → /commit-push-pr → /sync
 ```
 
 ```mermaid
@@ -91,12 +91,14 @@ graph LR
     T --> CR["/code-review<br><small>Quality & security check</small>"]
     CR --> HV["/handoff-verify<br><small>Fresh-context validation</small>"]
     HV --> CPR["/commit-push-pr<br><small>Commit, push, PR & merge</small>"]
+    CPR --> S["/sync<br><small>Sync project docs</small>"]
 
     style P fill:#533483,stroke:#fff,color:#fff
     style T fill:#0f3460,stroke:#fff,color:#fff
     style CR fill:#0f3460,stroke:#fff,color:#fff
     style HV fill:#e94560,stroke:#fff,color:#fff
     style CPR fill:#1a1a2e,stroke:#fff,color:#fff
+    style S fill:#16213e,stroke:#fff,color:#fff
 ```
 
 | Step | What happens |
@@ -106,13 +108,14 @@ graph LR
 | `/code-review` | Security + quality check on the code you just wrote. |
 | `/handoff-verify` | Auto-verify build/test/lint all at once. |
 | `/commit-push-pr` | Commit, push, create PR, and optionally merge -- all in one. |
+| `/sync` | Sync project docs (prompt_plan.md, spec.md, CLAUDE.md, rules). |
 
 ### Bug Fix
 
 Fast turnaround for bug fixes with automatic retry:
 
 ```
-/explore → /tdd → /verify-loop → /quick-commit
+/explore → /tdd → /verify-loop → /quick-commit → /sync
 ```
 
 | Step | What happens |
@@ -121,6 +124,7 @@ Fast turnaround for bug fixes with automatic retry:
 | `/tdd` | Write a test that reproduces the bug, then fix it. |
 | `/verify-loop` | Auto-retry build/lint/test up to 3 times with auto-fix on failure. |
 | `/quick-commit` | Fast commit for simple, well-tested changes. |
+| `/sync` | Sync project docs after commit. |
 
 ### Security Audit
 
@@ -451,7 +455,7 @@ Each agent has a **color** in the UI for quick visual identification:
 | `/update-codemaps` | Analyze codebase and update architecture docs. |
 | `/update-docs` | Sync documentation from source-of-truth. |
 | `/sync-docs` | Sync prompt_plan.md, spec.md, CLAUDE.md + rules. |
-| `/sync` | git pull + sync-docs in sequence. |
+| `/sync` | Pull latest changes and sync all project docs (prompt_plan.md, spec.md, CLAUDE.md, rules). Use after any workflow or at session start. |
 | `/pull` | Quick `git pull origin main`. |
 
 #### Project Management
@@ -551,6 +555,26 @@ Run `git pull` in the claude-forge directory. Because the installer uses symlink
 <summary><strong>Does Claude Forge work on Windows?</strong></summary>
 
 Yes. Run `install.ps1` in PowerShell as Administrator. Windows uses file copies instead of symlinks, so you need to re-run `install.ps1` after each `git pull` to apply updates. All agents, commands, skills, and hooks work the same on Windows, macOS, and Linux.
+
+</details>
+
+<details>
+<summary><strong>What does /sync do?</strong></summary>
+
+`/sync` synchronizes your project's memory and documentation. It pulls the latest changes from the remote repository and then syncs all project docs -- `prompt_plan.md`, `spec.md`, `CLAUDE.md`, and rule files. Run it after completing any workflow (feature, bug fix, refactor) or at the start of a new session to ensure Claude has the latest context.
+
+</details>
+
+<details>
+<summary><strong>How does Claude Forge handle memory across sessions?</strong></summary>
+
+Claude Forge uses a 3-layer memory system:
+
+1. **Project docs** (`CLAUDE.md`, `prompt_plan.md`, `spec.md`) -- Project-level instructions and plans that persist in the repository. `/sync` keeps these up to date.
+2. **Rule files** (`rules/`) -- Coding style, security, workflow conventions loaded automatically each session.
+3. **MCP memory server** -- A persistent knowledge graph that stores entities and relations across sessions.
+
+Running `/sync` at session start ensures layers 1 and 2 are current. The MCP memory server (layer 3) persists automatically.
 
 </details>
 

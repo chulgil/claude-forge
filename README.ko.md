@@ -59,7 +59,7 @@ claude
 | 단계 | 할 일 |
 |:----:|:------|
 | 1 | 설치 후 `/guide` 실행 -- 3분 인터랙티브 투어 |
-| 2 | [첫 사용자 가이드](docs/FIRST-STEPS.md) 읽기 -- 용어 사전 + TOP 5 커맨드 |
+| 2 | [첫 사용자 가이드](docs/FIRST-STEPS.md) 읽기 -- 용어 사전 + TOP 6 커맨드 |
 | 3 | [상황별 레시피](docs/WORKFLOW-RECIPES.md) 보기 -- 복사해서 쓰는 5가지 시나리오 |
 
 또는 `/auto 로그인 페이지 만들기`를 입력하면, 계획부터 PR까지 알아서 진행합니다.
@@ -77,7 +77,7 @@ claude
 계획 수립부터 PR 생성까지 한 번에 진행합니다.
 
 ```
-/plan → /tdd → /code-review → /handoff-verify → /commit-push-pr
+/plan → /tdd → /code-review → /handoff-verify → /commit-push-pr → /sync
 ```
 
 ```mermaid
@@ -86,12 +86,14 @@ graph LR
     T --> CR["/code-review<br/><small>코드 리뷰</small>"]
     CR --> HV["/handoff-verify<br/><small>Fresh 검증</small>"]
     HV --> CPR["/commit-push-pr<br/><small>커밋 & PR</small>"]
+    CPR --> S["/sync<br/><small>문서 동기화</small>"]
 
     style P fill:#e94560,stroke:#fff,color:#fff
     style T fill:#0f3460,stroke:#fff,color:#fff
     style CR fill:#0f3460,stroke:#fff,color:#fff
     style HV fill:#533483,stroke:#fff,color:#fff
     style CPR fill:#16213e,stroke:#fff,color:#fff
+    style S fill:#1a1a2e,stroke:#fff,color:#fff
 ```
 
 | 단계 | 커맨드 | 설명 |
@@ -101,11 +103,12 @@ graph LR
 | 3 | `/code-review` | code-reviewer 에이전트가 CRITICAL/HIGH/MEDIUM 이슈 분류 |
 | 4 | `/handoff-verify` | verify-agent가 새 컨텍스트에서 빌드·테스트·린트 검증 |
 | 5 | `/commit-push-pr` | 커밋 메시지 작성, 푸시, PR 생성까지 자동화 |
+| 6 | `/sync` | 프로젝트 문서 동기화 (prompt_plan.md, spec.md, CLAUDE.md, rules) |
 
 ### 버그 수정
 
 ```
-/explore → /tdd → /verify-loop → /quick-commit
+/explore → /tdd → /verify-loop → /quick-commit → /sync
 ```
 
 | 단계 | 커맨드 | 설명 |
@@ -114,6 +117,7 @@ graph LR
 | 2 | `/tdd` | 실패 테스트 작성 → 최소 수정 → 통과 확인 |
 | 3 | `/verify-loop` | 빌드·테스트를 반복 검증하며 사이드 이펙트 확인 |
 | 4 | `/quick-commit` | 빠른 커밋 & 푸시 |
+| 5 | `/sync` | 커밋 후 프로젝트 문서 동기화 |
 
 ### 보안 감사
 
@@ -442,7 +446,7 @@ claude-forge/
 | `/suggest-automation` | 자동화 기회 제안 |
 | `/summarize` | 코드/문서 요약 |
 | `/sync-docs` | 문서 동기화 |
-| `/sync` | 전체 동기화 |
+| `/sync` | 최신 변경사항 풀 + 프로젝트 문서 동기화 (prompt_plan.md, spec.md, CLAUDE.md, rules). 워크플로우 완료 후 또는 세션 시작 시 사용. |
 | `/tdd` | 테스트 먼저 만들고 코드 작성 |
 | `/test-coverage` | 테스트 커버리지 분석 |
 | `/update-codemaps` | 코드맵 업데이트 |
@@ -553,6 +557,30 @@ You are an expert [역할]. Your mission is to [목표].
 # hooks/my-guard.sh
 # 특정 도구 이벤트(PreToolUse, PostToolUse 등)에서 실행됩니다.
 ```
+
+</details>
+
+---
+
+## 자주 묻는 질문
+
+<details>
+<summary><strong>/sync는 무엇을 하나요?</strong></summary>
+
+`/sync`는 프로젝트 메모리와 문서를 동기화합니다. 원격 저장소에서 최신 변경사항을 풀한 뒤, 프로젝트 문서(`prompt_plan.md`, `spec.md`, `CLAUDE.md`, 규칙 파일)를 모두 동기화합니다. 워크플로우(기능 개발, 버그 수정, 리팩토링) 완료 후 또는 새 세션 시작 시 실행하면 Claude가 최신 컨텍스트를 유지합니다.
+
+</details>
+
+<details>
+<summary><strong>Claude Forge는 세션 간 메모리를 어떻게 관리하나요?</strong></summary>
+
+Claude Forge는 3계층 메모리 시스템을 사용합니다:
+
+1. **프로젝트 문서** (`CLAUDE.md`, `prompt_plan.md`, `spec.md`) -- 저장소에 영속하는 프로젝트 수준 지침과 계획. `/sync`로 최신 상태를 유지합니다.
+2. **규칙 파일** (`rules/`) -- 코딩 스타일, 보안, 워크플로우 규칙이 매 세션마다 자동 로드됩니다.
+3. **MCP 메모리 서버** -- 세션 간 영속하는 지식 그래프로 엔티티와 관계를 저장합니다.
+
+세션 시작 시 `/sync`를 실행하면 1, 2 계층이 최신 상태가 됩니다. MCP 메모리 서버(3계층)는 자동으로 영속합니다.
 
 </details>
 
