@@ -98,6 +98,11 @@
             "type": "command",
             "command": "~/.claude/hooks/remote-command-guard.sh",
             "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/pre-push-security.sh",
+            "timeout": 15000
           }
         ]
       },
@@ -205,6 +210,15 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/session-wrap-suggest.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify.sh",
+            "timeout": 5000
           }
         ]
       }

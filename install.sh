@@ -339,20 +339,28 @@ setup_shell_aliases() {
 
     local marker="# Claude Code aliases"
     if grep -q "$marker" "$shell_rc" 2>/dev/null; then
-        echo -e "  ${GREEN}✓${NC} Aliases already configured in $(basename "$shell_rc")"
+        # 기존 aliases가 있으면 teammate-mode auto로 업데이트
+        if grep -q "teammate-mode" "$shell_rc" 2>/dev/null; then
+            echo -e "  ${GREEN}✓${NC} Aliases already configured with teammate-mode auto"
+        else
+            sed -i.bak "s|alias cc='claude'|alias cc='claude --teammate-mode auto'|" "$shell_rc"
+            sed -i.bak "s|alias ccr='claude --resume'|alias ccr='claude --resume --teammate-mode auto'|" "$shell_rc"
+            rm -f "${shell_rc}.bak"
+            echo -e "  ${GREEN}✓${NC} Updated aliases with --teammate-mode auto"
+        fi
         return 0
     fi
 
     cat >> "$shell_rc" << 'ALIASES'
 
 # Claude Code aliases
-alias cc='claude'
-alias ccr='claude --resume'
+alias cc='claude --teammate-mode auto'
+alias ccr='claude --resume --teammate-mode auto'
 ALIASES
 
     echo -e "  ${GREEN}✓${NC} Added aliases to $(basename "$shell_rc")"
-    echo "    cc  → claude"
-    echo "    ccr → claude --resume"
+    echo "    cc  → claude --teammate-mode auto"
+    echo "    ccr → claude --resume --teammate-mode auto"
 }
 
 # 9. Verify installation
@@ -440,7 +448,26 @@ write_meta() {
     echo -e "  ${GREEN}✓${NC} .forge-meta.json"
 }
 
-# 11. Install work tracker (Supabase sync)
+# 11. Setup macOS iTerm2 (macOS only)
+setup_iterm() {
+    if [[ "$PLATFORM" != "macos" ]]; then
+        return 0
+    fi
+
+    local iterm_script="$REPO_DIR/setup/setup-iterm.sh"
+    if [ -f "$iterm_script" ]; then
+        echo ""
+        read -p "Setup iTerm2 for Claude Code? (profile, notifications, font) (y/n) " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            bash "$iterm_script"
+        else
+            echo "Skipping iTerm2 setup."
+        fi
+    fi
+}
+
+# 12. Install work tracker (Supabase sync)
 install_work_tracker() {
     local wt_script="$REPO_DIR/setup/work-tracker-install.sh"
     if [ -f "$wt_script" ]; then
@@ -478,6 +505,9 @@ main() {
 
         # Install external skills
         install_external_skills
+
+        # Setup macOS iTerm2
+        setup_iterm
 
         # Install work tracker
         install_work_tracker
