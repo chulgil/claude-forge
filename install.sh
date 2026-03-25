@@ -283,7 +283,81 @@ install_mcp_servers() {
     echo "Run 'claude mcp list' to verify installed servers."
 }
 
-# 7. Install external skills (npx skills)
+# 7. Install GStack Browse (0-token headless browser)
+install_gstack() {
+    echo ""
+    echo "GStack Browse — 0-token headless browser for QA testing"
+
+    read -p "Install GStack Browse? (Bun required, ~60MB) (y/n) " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping GStack installation."
+        return 0
+    fi
+
+    # Check Bun
+    if ! command -v bun >/dev/null; then
+        echo -e "${YELLOW}Bun not found. Installing...${NC}"
+        curl -fsSL https://bun.sh/install | bash 2>/dev/null
+        export BUN_INSTALL="$HOME/.bun"
+        export PATH="$BUN_INSTALL/bin:$PATH"
+        if ! command -v bun >/dev/null; then
+            echo -e "${RED}Bun installation failed. Skipping GStack.${NC}"
+            return 0
+        fi
+        echo -e "  ${GREEN}✓${NC} Bun installed"
+    else
+        echo -e "  ${GREEN}✓${NC} Bun $(bun --version)"
+    fi
+
+    local gstack_dir="$CLAUDE_DIR/skills/gstack"
+
+    if [ -d "$gstack_dir/.git" ]; then
+        echo "  Updating existing GStack..."
+        cd "$gstack_dir" && git pull --quiet 2>/dev/null
+        echo -e "  ${GREEN}✓${NC} GStack updated"
+    else
+        echo "  Cloning GStack..."
+        rm -rf "$gstack_dir" 2>/dev/null
+        git clone --depth 1 https://github.com/garrytan/gstack.git "$gstack_dir" 2>/dev/null
+        if [ ! -d "$gstack_dir" ]; then
+            echo -e "${RED}GStack clone failed.${NC}"
+            return 0
+        fi
+        echo -e "  ${GREEN}✓${NC} GStack cloned"
+    fi
+
+    # Install dependencies
+    echo "  Installing dependencies..."
+    cd "$gstack_dir" && bun install --silent 2>/dev/null
+    echo -e "  ${GREEN}✓${NC} Dependencies installed"
+
+    # Build browse binary
+    echo "  Building browse binary..."
+    mkdir -p "$gstack_dir/browse/dist"
+    bun build --compile browse/src/cli.ts --outfile browse/dist/browse 2>/dev/null
+
+    if [ -x "$gstack_dir/browse/dist/browse" ]; then
+        echo -e "  ${GREEN}✓${NC} Browse binary compiled"
+
+        # Install Playwright Chromium
+        echo "  Checking Chromium..."
+        npx playwright install chromium 2>/dev/null
+        echo -e "  ${GREEN}✓${NC} Chromium ready"
+
+        echo ""
+        echo -e "  ${GREEN}GStack Browse installed!${NC}"
+        echo "    Binary: $gstack_dir/browse/dist/browse"
+        echo "    Usage:  \$B goto <url> → \$B snapshot -i → \$B click @e3"
+        echo "    Or ask Claude: \"이 사이트 테스트해줘\""
+    else
+        echo -e "${RED}Browse binary build failed. Check Bun version.${NC}"
+    fi
+
+    cd "$REPO_DIR"
+}
+
+# 8. Install external skills (npx skills)
 install_external_skills() {
     echo ""
     echo "Installing external skills..."
@@ -503,6 +577,9 @@ main() {
         # Install MCP servers
         install_mcp_servers
 
+        # Install GStack Browse
+        install_gstack
+
         # Install external skills
         install_external_skills
 
@@ -519,6 +596,7 @@ main() {
   ║           Claude Forge 설치 완료!                    ║
   ╠══════════════════════════════════════════════════════╣
   ║  11 agents · 36+ commands · 6-layer security        ║
+  ║  + GStack Browse (0-token headless browser)         ║
   ╚══════════════════════════════════════════════════════╝${NC}
 
   처음이신가요? 이것만 하세요:
