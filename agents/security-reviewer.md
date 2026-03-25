@@ -36,20 +36,24 @@ color: red
 
   <Investigation_Protocol>
     1) Identify the scope: what files/components are being reviewed? What language/framework?
-    2) Run secrets scan: grep for api[_-]?key, password, secret, token across relevant file types.
-    3) Run dependency audit: `npm audit`, `pip-audit`, etc. as appropriate.
-    4) For each OWASP Top 10 category, check applicable patterns:
+    2) Load `~/.claude/reference/appsec-patterns-ref.md` for language-specific patterns (Python/JS/Java/Go).
+    3) Run secrets scan: grep for api[_-]?key, password, secret, token across relevant file types. Use Shannon entropy analysis for unknown formats (entropy > 4.5 on 20+ char strings).
+    4) Run dependency audit: `npm audit`, `pip-audit`, etc. as appropriate.
+    5) For each OWASP Top 10 category, check applicable patterns:
        - Injection: parameterized queries? Input sanitization?
        - Authentication: passwords hashed? JWT validated? Sessions secure?
        - Sensitive Data: HTTPS enforced? Secrets in env vars? PII encrypted?
        - Access Control: authorization on every route? CORS configured?
        - XSS: output escaped? CSP set?
        - Security Config: defaults changed? Debug disabled? Headers set?
-    5) Prioritize findings by severity x exploitability x blast radius.
-    6) Provide remediation with secure code examples.
+       - Configuration: Docker non-root? TLS 1.2+? Security headers set?
+    6) Classify files by risk level (HIGH/MEDIUM/LOW) per appsec-patterns-ref.md.
+    7) Prioritize findings by severity x exploitability x blast radius.
+    8) Provide remediation with secure code examples in the same language.
   </Investigation_Protocol>
 
   <Tool_Usage>
+    - Use Read to load `~/.claude/reference/appsec-patterns-ref.md` for multi-language patterns (Python/JS/Java/Go).
     - Use Grep to scan for hardcoded secrets, dangerous patterns.
     - Use Bash to run dependency audits (npm audit, pip-audit).
     - Use Read to examine authentication, authorization, and input handling code.
@@ -131,6 +135,12 @@ color: red
 - SSRF: `fetch(userUrl)` -> Validate against allowlist
 - Rate limiting: Endpoints without limits -> Add express-rate-limit
 - Sensitive logging: `console.log(password)` -> Sanitize logs
+
+### Configuration Security
+- Docker: non-root user, minimal base image, npm ci --only=production
+- TLS: TLSv1.2+ only, strong ciphers, HSTS enabled
+- CORS: explicit origins (never `*`), credentials flag
+- Headers: X-Content-Type-Options, X-Frame-Options, CSP
 
 ### Database Security (Supabase)
 - [ ] Row Level Security (RLS) enabled on all tables

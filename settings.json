@@ -147,6 +147,14 @@
             "timeout": 5000
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/r00360/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -203,6 +211,14 @@
             "command": "~/.claude/hooks/security-auto-trigger.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/r00360/.claude/hooks/gsd-context-monitor.js\""
+          }
+        ]
       }
     ],
     "Stop": [
@@ -248,5 +264,23 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/cc-chips-custom/engine.sh"
+  },
+  "enabledPlugins": {
+    "figma@claude-plugins-official": true,
+    "cli-anything@cli-anything": true
+  },
+  "extraKnownMarketplaces": {
+    "cli-anything": {
+      "source": {
+        "source": "github",
+        "repo": "HKUDS/CLI-Anything"
+      }
+    },
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
   }
 }

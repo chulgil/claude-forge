@@ -67,6 +67,12 @@ SECRET_PATTERNS = [
     (r'\bglpat-[a-zA-Z0-9_-]{20,}\b', "GitLab PAT"),
     (r'\bnpm_[a-zA-Z0-9]{36,}\b', "NPM Token"),
 
+    # 추가 서비스 키 패턴
+    (r'\bAIza[0-9A-Za-z\-_]{35}\b', "Google API Key"),
+    (r'(?i)\b(sk|pk)_(test|live)_[0-9a-zA-Z]{24,}\b', "Stripe Key"),
+    (r'\beyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b', "JWT Token"),
+    (r'(?i)(mysql|postgresql|mongodb|redis)://[^\s]+:[^\s]+@[^\s]+', "DB URL with Credentials"),
+
     # Bearer/Auth 토큰
     (r'(?i)\bBearer\s+[a-zA-Z0-9_.-]{20,}\b', "Bearer Token"),
     (r'(?i)\btoken=[a-zA-Z0-9_.-]{20,}\b', "Token Parameter"),
@@ -96,6 +102,18 @@ SECRET_PATTERNS = [
 
 import base64
 import urllib.parse
+import math
+from collections import Counter
+
+def shannon_entropy(data):
+    """Shannon 엔트로피 계산 - 높은 무작위성(>4.5)은 시크릿일 가능성"""
+    if not data or len(data) < 20:
+        return 0
+    entropy = 0
+    for count in Counter(data).values():
+        p = count / len(data)
+        entropy -= p * math.log2(p)
+    return entropy
 
 def decode_layers(text):
     """base64, URL 인코딩을 디코딩하여 숨겨진 시크릿을 탐지"""
@@ -140,7 +158,21 @@ for pattern, desc in SECRET_PATTERNS:
         if desc not in masked_types:
             masked_types.append(desc)
 
-# 2단계: 인코딩 우회 탐지 (디코딩된 텍스트에서 시크릿 발견 시 인코딩된 원본 청크를 마스킹)
+# 2단계: 엔트로피 기반 시크릿 탐지 (패턴 미매칭 영역)
+secret_var_re = re.compile(
+    r'(?i)(?:key|secret|token|password|credential|auth|api_key|apikey)\s*[:=]\s*["\']([^"\']{20,})["\']'
+)
+for match in secret_var_re.finditer(masked_output):
+    value = match.group(1)
+    entropy = shannon_entropy(value)
+    if entropy > 4.5:
+        original = match.group(0)
+        masked_output = masked_output.replace(original, mask_match(original))
+        masked_count += 1
+        if "High Entropy Secret" not in masked_types:
+            masked_types.append("High Entropy Secret")
+
+# 3단계: 인코딩 우회 탐지 (디코딩된 텍스트에서 시크릿 발견 시 인코딩된 원본 청크를 마스킹)
 decoded_variants = decode_layers(tool_result)
 for decoded_text in decoded_variants:
     for pattern, desc in SECRET_PATTERNS:

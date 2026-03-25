@@ -26,6 +26,7 @@
 |------|------|------|
 | [agents-teams-ref.md](./agents-teams-ref.md) | Agent Teams 상세: 전제조건, 규칙, 리더 규율, 팀원 관리 | agents-v2.md에서 분리 |
 | [agents-config-ref.md](./agents-config-ref.md) | MCP 분배 패턴, Subagent 선택 가이드 | agents-v2.md에서 분리 |
+| [appsec-patterns-ref.md](./appsec-patterns-ref.md) | OWASP Top 10 다국어 코드 예제, 위험 함수, 설정 감사, 시크릿 패턴 | security-reviewer 에이전트 참조 |
 | [omc-adoption.md](./omc-adoption.md) | 활성/비활성 기능, 병합 에이전트, 스킬 우선순위, AST 도구 | **주 파일** |
 | [omc-adoption-detail.md](./omc-adoption-detail.md) | 설치 정보, 업데이트 5단계, 롤백, 위험 관리 | omc-adoption.md에서 분리 |
 
@@ -36,10 +37,15 @@ rules/ (자동 로드)
   agents-v2.md (핵심, ~4KB)
     → reference/agents-teams-ref.md  (팀 운영 상세, ~10KB)
     → reference/agents-config-ref.md (MCP 설정, ~1KB)
+  security.md (핵심, ~1KB)
+    → reference/appsec-patterns-ref.md (다국어 보안 패턴, ~8KB)
 
 reference/ (필요 시 Read)
   omc-adoption.md (핵심, ~3KB)
     → omc-adoption-detail.md (설치/유지보수, ~3KB)
+  appsec-patterns-ref.md (보안 패턴, ~8KB)
+    ← security-reviewer 에이전트에서 참조
+    ← pre-push-security.sh 훅에서 참조
 ```
 
 ## 수정 가이드
