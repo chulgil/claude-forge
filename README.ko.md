@@ -30,13 +30,40 @@
 
 ## Claude Forge란?
 
-Claude Forge는 **Claude Code**를 기본 CLI에서 **완전한 개발 환경**으로 변환합니다. 설치 한 번으로 **11개 전문 에이전트**(Opus 6 + Sonnet 5), **36개 슬래시 커맨드**, **15개 스킬 워크플로우**, **14개 자동화 훅**(보안 6 + 유틸리티 8), **8개 규칙 파일**, **6개 MCP 서버**가 모두 연결되어 즉시 사용 가능합니다.
+Claude Forge는 **Claude Code**를 기본 CLI에서 **완전한 개발 환경**으로 변환합니다. 설치 한 번으로 **11개 전문 에이전트**(Opus 6 + Sonnet 5), **40개 슬래시 커맨드**, **15개 스킬 워크플로우**, **15개 자동화 훅**(보안 6 + 유틸리티 9), **9개 규칙 파일**, **6개 MCP 서버**가 모두 연결되어 즉시 사용 가능합니다.
 
 > oh-my-zsh가 터미널을 강화하듯, Claude Forge는 AI 코딩 어시스턴트를 **파워 유저 도구**로 업그레이드합니다.
 
 ---
 
 ## ⚡ 빠른 시작
+
+### 플러그인으로 설치 (권장)
+
+Claude Forge는 **Anthropic 공식 플러그인 마켓플레이스**에 등록 신청되었으며, Claude Code에서 바로 설치할 수 있습니다:
+
+```bash
+# 방법 A: 공식 마켓플레이스에서 설치 (승인 후)
+/plugin install claude-forge@claude-plugins-official
+
+# 방법 B: Claude Forge 마켓플레이스에서 설치
+/plugin marketplace add sangrokjung/claude-forge
+/plugin install claude-forge@claude-forge
+
+# 방법 C: GitHub에서 직접 설치
+claude plugin install github:sangrokjung/claude-forge
+```
+
+업데이트:
+```bash
+/plugin marketplace update claude-forge
+```
+
+> **참고**: Claude Forge는 [Anthropic 공식 플러그인 디렉토리](https://github.com/anthropics/claude-plugins-official)에 제출되어 검토 중입니다. 승인 전까지 방법 B 또는 C를 사용하세요.
+
+### Git Clone으로 설치
+
+개발이나 커스터마이징을 위해 저장소를 클론합니다:
 
 ```bash
 # 1. 클론
@@ -51,6 +78,25 @@ claude
 ```
 
 이것으로 끝. 모든 에이전트, 커맨드, 훅, 규칙이 즉시 사용 가능합니다.
+
+### v2.2 업데이트
+
+| 변경 | 설명 |
+|:-----|:-----|
+| **수술적 변경 원칙** | 12번째 Golden Principle 추가: 요청받은 것만 변경. 인접 코드 "개선", 스타일 변경, 관련 없는 리팩토링 금지. [Andrej Karpathy의 LLM 코딩 실수 관찰](https://x.com/karpathy/status/2015883857489522876)에서 영감. |
+| **코딩 전 가정 명시** | 새 interaction 규칙: 모호한 요구사항은 조용히 가정하지 말고, 가정을 명시하고 대안을 제시한 후 구현. |
+| **합리화 방지 확장** | "이왕 고치는 김에 정리도", "확장성을 위해 추상화 필요" 등 LLM의 흔한 변명 2개 추가 차단. |
+
+<details>
+<summary><strong>v2.1 변경사항</strong></summary>
+
+| 변경 | 설명 |
+|:-----|:-----|
+| **검증 규칙 추가** | 새 `verification.md` 규칙이 증거 기반 완료를 강제합니다 -- 테스트/빌드 실행 결과 없이 완료 선언 금지. |
+| **에이전트 자기 진화** | 핵심 5개 에이전트(planner, architect, code-reviewer, security-reviewer, tdd-guide)가 작업 후 `~/.claude/agent-memory/`에 학습 내용을 기록합니다. |
+| **훅 동기화** | `forge-update-check.sh` (세션 시작 시 업데이트 알림)와 `observe.sh` (지속 학습 관찰) 추가. |
+
+</details>
 
 ### 처음이신가요?
 
@@ -176,10 +222,10 @@ graph LR
 | 카테고리 | 수량 | 주요 항목 |
 |:--------:|:----:|:----------|
 | **에이전트** | 11 | `planner` `architect` `code-reviewer` `security-reviewer` `tdd-guide` `database-reviewer` (Opus) / `build-error-resolver` `e2e-runner` `refactor-cleaner` `doc-updater` `verify-agent` (Sonnet) |
-| **커맨드** | 36 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/security-review` ... |
+| **커맨드** | 40 | `/commit-push-pr` `/handoff-verify` `/explore` `/tdd` `/plan` `/orchestrate` `/security-review` ... |
 | **스킬** | 15 | `build-system` `security-pipeline` `eval-harness` `team-orchestrator` `session-wrap` ... |
-| **훅** | 14 | 보안 방어 6개 + 유틸리티 8개 |
-| **규칙** | 8 | `coding-style` `security` `git-workflow` `golden-principles` `agents-v2` ... |
+| **훅** | 15 | 보안 방어 6개 + 유틸리티 9개 |
+| **규칙** | 9 | `coding-style` `security` `git-workflow` `golden-principles` `agents-v2` `verification` ... |
 | **MCP 서버** | 6 | `context7` `memory` `exa` `github` `fetch` `jina-reader` |
 
 ---
@@ -272,10 +318,10 @@ vim ~/.claude/settings.local.json
 graph TB
     subgraph REPO["claude-forge (git 리포)"]
         A["agents/ (11)"]
-        C["commands/ (36)"]
+        C["commands/ (40)"]
         S["skills/ (15)"]
-        H["hooks/ (14)"]
-        R["rules/ (8)"]
+        H["hooks/ (15)"]
+        R["rules/ (9)"]
         SC["scripts/"]
         CC["cc-chips/"]
         K["knowledge/"]
@@ -322,10 +368,10 @@ claude-forge/
   ├── cc-chips-custom/      커스텀 상태바 오버레이
   ├── commands/             슬래시 커맨드 (.md + 디렉토리)
   ├── docs/                 스크린샷, 다이어그램
-  ├── hooks/                이벤트 기반 스크립트
+  ├── hooks/                이벤트 기반 스크립트 (15개)
   ├── knowledge/            지식 베이스
   ├── reference/            참조 문서
-  ├── rules/                자동 로드 규칙 파일
+  ├── rules/                자동 로드 규칙 파일 (9개)
   ├── scripts/              유틸리티 스크립트
   ├── setup/                설치 가이드 + 템플릿
   ├── skills/               다단계 스킬 워크플로우
@@ -339,6 +385,75 @@ claude-forge/
 ```
 
 </details>
+
+---
+
+## 🔀 에이전트 라우터 시스템
+
+에이전트 라우터는 전문 에이전트가 자신의 도메인 작업을 처리하도록 **강제 위임하는 시스템**입니다. 이 시스템이 없으면 Claude는 전문 에이전트가 존재하더라도 모든 작업을 직접 처리합니다.
+
+### 동작 원리
+
+```mermaid
+graph LR
+    U["사용자 메시지"] --> SP["using-superpowers<br><small>1% 규칙: 스킬 체크 강제</small>"]
+    SP --> AR["agent-router<br><small>도메인 매칭</small>"]
+    AR -->|"매칭"| A["Agent Tool<br><small>전문가 스폰</small>"]
+    AR -->|"매칭 없음"| D["직접 응답"]
+    A --> R["전문가 결과"]
+
+    style U fill:#1a1a2e,stroke:#fff,color:#fff
+    style SP fill:#e94560,stroke:#fff,color:#fff
+    style AR fill:#533483,stroke:#fff,color:#fff
+    style A fill:#0f3460,stroke:#fff,color:#fff
+    style D fill:#16213e,stroke:#fff,color:#fff
+    style R fill:#0f3460,stroke:#fff,color:#fff
+```
+
+### 강제 체인
+
+| 계층 | 메커니즘 | 역할 |
+|:-----|:---------|:-----|
+| **system-reminder** | 매 턴 `agent-router` 스킬 description 노출 | 가시성 |
+| **using-superpowers** | "1%라도 스킬이 해당되면 반드시 호출" | 강제 |
+| **agent-router** | 라우팅 테이블: 키워드 → 에이전트 매핑 | 위임 |
+| **agents-v2.md** | 우선순위 규칙 + 팀 관리 | 오케스트레이션 |
+
+### 라우팅 테이블 (33개 에이전트)
+
+| 도메인 | 키워드 | 에이전트 |
+|:-------|:-------|:---------|
+| 구현 계획 | 구현 계획, 복잡한 기능, 설계 | `planner` |
+| 코드 리뷰 | 코드 리뷰, 코드 검토 | `code-reviewer` |
+| 아키텍처 | 아키텍처, 기술 부채, 설계 판단 | `architect` |
+| 법무 | 계약, 계약서, NDA, 법률, 판례 | `contract-legal` |
+| 재무 | 세금, 세무, 회계, 부가세, 절세 | `financial-accountant` |
+| 특허 | 특허, 발명, 청구항, 상표, IP | `patent-attorney` |
+| SEO | SEO, GEO, AEO, 검색 노출 | `seo-geo-aeo-strategist` |
+| 기획 | 제품 전략, 사업 전략, 로드맵 | `product-strategist` |
+| 카피 | 카피, 헤드라인, CTA, 광고 문구 | `copywriting` |
+| 견적 | 견적, 견적서, 가격 제안 | `quotation` |
+| 정부지원 | 정부지원, 보조금, 사업계획서, TIPS | `gov-support-strategist` |
+| 광고 | 광고 최적화, ROAS, 광고 분석 | `ad-optimizer-team` |
+| CRM | 영업, 세일즈, 리드, 파이프라인 | `crm-manager` |
+| 디자인 | UI, UX, 랜딩페이지, 대시보드 | `web-designer` |
+| 리서치 | 조사, 리서치, 시장 조사, 동향 분석 | `researcher` |
+| AI 연구 | AI 연구, 논문 분석, SOTA | `ai-researcher` |
+| 스토리텔링 | 브랜드 스토리, 내러티브, 피치덱 | `storyteller` |
+
+> **팀 하위 에이전트** (ad-compass, ad-scout-google 등)는 상위 팀 에이전트가 관리하므로 직접 라우팅하지 않습니다.
+
+### 재귀 방지
+
+`using-superpowers`와 `agent-router` 모두 `<SUBAGENT-STOP>` 가드를 포함하여 서브에이전트 내부에서 무한 재귀를 방지합니다.
+
+### 커스터마이징
+
+`commands/agent-router.md`를 편집하여 자신만의 에이전트를 라우팅 테이블에 추가하세요:
+
+```markdown
+| 나만의 키워드 | my-custom-agent |
+```
 
 ---
 
@@ -367,6 +482,7 @@ claude-forge/
 |:---|:-----|
 | `code-quality-reminder.sh` | 코드 품질 체크리스트 알림 |
 | `context-sync-suggest.sh` | 컨텍스트 동기화 제안 |
+| `forge-update-check.sh` | 세션 시작 시 프레임워크 업데이트 확인 |
 | `mcp-usage-tracker.sh` | MCP 사용량 추적 |
 | `session-wrap-suggest.sh` | 세션 종료 시 정리 제안 |
 | `task-completed.sh` | 작업 완료 알림 |
@@ -415,7 +531,7 @@ claude-forge/
 ---
 
 <details>
-<summary><strong>📋 전체 커맨드 목록 (36개)</strong></summary>
+<summary><strong>📋 전체 커맨드 목록 (40개)</strong></summary>
 
 | 커맨드 | 설명 |
 |:-------|:-----|
@@ -431,6 +547,7 @@ claude-forge/
 | `/evaluating-llms-harness` | LLM 하네스 평가 |
 | `/explore` | 코드베이스를 탐색하여 구조를 파악 |
 | `/extract-errors` | 오류 추출 및 분석 |
+| `/forge-update` | Claude Forge 프레임워크를 최신 버전으로 업데이트 |
 | `/handoff-verify` | 빌드/테스트/린트 한 번에 자동 검증 |
 | `/init-project` | 프로젝트 초기 설정 |
 | `/learn` | 학습 및 지식 축적 |
@@ -574,13 +691,14 @@ You are an expert [역할]. Your mission is to [목표].
 <details>
 <summary><strong>Claude Forge는 세션 간 메모리를 어떻게 관리하나요?</strong></summary>
 
-Claude Forge는 3계층 메모리 시스템을 사용합니다:
+Claude Forge는 4계층 메모리 시스템을 사용합니다:
 
 1. **프로젝트 문서** (`CLAUDE.md`, `prompt_plan.md`, `spec.md`) -- 저장소에 영속하는 프로젝트 수준 지침과 계획. `/sync`로 최신 상태를 유지합니다.
 2. **규칙 파일** (`rules/`) -- 코딩 스타일, 보안, 워크플로우 규칙이 매 세션마다 자동 로드됩니다.
 3. **MCP 메모리 서버** -- 세션 간 영속하는 지식 그래프로 엔티티와 관계를 저장합니다.
+4. **에이전트 메모리** (`~/.claude/agent-memory/`) -- 핵심 에이전트가 작업 후 학습 내용을 기록하여 시간이 지남에 따라 추천 품질이 향상됩니다 (Self-Evolution).
 
-세션 시작 시 `/sync`를 실행하면 1, 2 계층이 최신 상태가 됩니다. MCP 메모리 서버(3계층)는 자동으로 영속합니다.
+세션 시작 시 `/sync`를 실행하면 1, 2 계층이 최신 상태가 됩니다. MCP 메모리 서버(3계층)와 에이전트 메모리(4계층)는 자동으로 영속합니다.
 
 </details>
 
