@@ -24,6 +24,7 @@
   <a href="#-claude-forge-installation-guide">Installation</a> &bull;
   <a href="#-claude-forge-architecture">Architecture</a> &bull;
   <a href="#-customization">Customization</a> &bull;
+  <a href="HISTORY.md">Fork History</a> &bull;
   <a href="README.ko.md">한국어</a>
 </p>
 
@@ -34,6 +35,19 @@
 Claude Forge is an open-source development environment for Claude Code that provides 11 specialized agents, 40 slash commands, 15 skill workflows, and 15 automation hooks. Often described as "oh-my-zsh for Claude Code", it transforms Claude Code from a basic CLI into a full-featured development environment. One install gives you agents, commands, skills, hooks, and 9 rule files -- all pre-wired and ready to go.
 
 > Think of it as **oh-my-zsh for Claude Code**: the same way oh-my-zsh enhances your terminal, Claude Forge supercharges your AI coding assistant.
+
+### 🔧 Fork Customizations (2026-03-25)
+
+This fork integrates [GStack](https://github.com/garrytan/gstack) patterns:
+
+| Feature | Command | Description |
+|---------|---------|-------------|
+| CEO Review | `/plan --ceo` | Product vision planning (10-star directions, scope modes, UX emotion) |
+| Sprint Retro | `/retro 7d` | Auto-generated retrospective from git history |
+| Split Commits | `/commit-push-pr --split` | Auto-split changes into logical commit groups |
+| 0-token Browser | GStack Browse | Accessibility tree-based headless browser (~100ms/call) |
+
+> Details: [HISTORY.md](HISTORY.md)
 
 ---
 

@@ -23,6 +23,7 @@
   <a href="#-구성-요소">구성 요소</a> &bull;
   <a href="#-설치-가이드">설치 가이드</a> &bull;
   <a href="#-아키텍처">아키텍처</a> &bull;
+  <a href="HISTORY.md">변경 이력</a> &bull;
   <a href="README.md">English</a>
 </p>
 
@@ -33,6 +34,19 @@
 Claude Forge는 **Claude Code**를 기본 CLI에서 **완전한 개발 환경**으로 변환합니다. 설치 한 번으로 **11개 전문 에이전트**(Opus 6 + Sonnet 5), **40개 슬래시 커맨드**, **15개 스킬 워크플로우**, **15개 자동화 훅**(보안 6 + 유틸리티 9), **9개 규칙 파일**, **6개 MCP 서버**가 모두 연결되어 즉시 사용 가능합니다.
 
 > oh-my-zsh가 터미널을 강화하듯, Claude Forge는 AI 코딩 어시스턴트를 **파워 유저 도구**로 업그레이드합니다.
+
+### 🔧 포크 커스터마이징 (2026-03-25)
+
+이 포크에는 [GStack](https://github.com/garrytan/gstack) 패턴이 통합되어 있습니다:
+
+| 기능 | 명령어 | 설명 |
+|------|--------|------|
+| CEO 리뷰 | `/plan --ceo` | 제품 비전 관점 기획 (텐스타 방향, 범위 모드, UX 감정) |
+| 스프린트 회고 | `/retro 7d` | Git 커밋 기반 자동 회고 리포트 |
+| 분할 커밋 | `/commit-push-pr --split` | 논리 단위별 자동 분리 커밋 |
+| 0-token 브라우저 | GStack Browse | 접근성 트리 기반 헤드리스 브라우저 (~100ms/호출) |
+
+> 상세: [HISTORY.md](HISTORY.md)
 
 ---
 
