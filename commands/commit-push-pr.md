@@ -1,7 +1,7 @@
 ---
 allowed-tools: Bash(git:*), Bash(gh:*), Bash(npm:*), Bash(python:*), Bash(go:*), Bash(cargo:*), Bash(make:*), Read, Grep, Glob
 description: 검증 완료 후 커밋 & PR & 머지 + MCP 알림 (v6)
-argument-hint: [커밋 메시지] [--merge|--squash|--rebase] [--draft] [--no-verify] [--no-checklist] [--skip-security] [--notify]
+argument-hint: [커밋 메시지] [--merge|--squash|--rebase] [--draft] [--no-verify] [--no-checklist] [--skip-security] [--notify] [--split]
 ---
 
 ## Task
@@ -31,6 +31,7 @@ gh --version 2>/dev/null | head -1 || echo "not installed"
 - `--no-checklist` → 머지 후 웹 체크리스트 생성 스킵
 - `--skip-security` → 보안 사전 검증 스킵
 - `--notify` → 머지 후 MCP 알림 발송 (v6 신규)
+- `--split` → 분할 커밋: 변경 파일을 논리 단위로 자동 분리하여 개별 커밋 (GStack Release 패턴 차용)
 - 나머지 → 커밋 메시지
 
 **`--draft`와 머지 옵션 동시 사용 시:**
@@ -228,6 +229,9 @@ MEDIUM: [N]건
 
 ### 5단계: 스테이징 & 커밋
 
+**`--split` 있으면 → 5-S단계로 (분할 커밋)**
+**없으면 → 기존 단일 커밋 로직:**
+
 ```bash
 git add -A
 ```
@@ -259,6 +263,52 @@ security-scan: [pass|warn|skipped]
 ```bash
 git commit -m "[메시지]"
 ```
+
+---
+
+#### 5-S단계: 분할 커밋 (`--split`, GStack Release 패턴 차용)
+
+> `--split` 플래그가 있을 때만 실행. 5단계의 단일 커밋 대신 이 절차를 사용한다.
+
+**5-S-1. 변경 파일 분류:**
+
+```bash
+git diff --name-only   # unstaged
+git diff --cached --name-only  # staged
+```
+
+변경 파일을 다음 기준으로 논리 그룹으로 분류:
+
+| 우선순위 | 그룹 | 패턴 | 커밋 타입 |
+|---------|------|------|----------|
+| 1 | 스키마/모델 | `models/`, `entities/`, `*.sql`, `migrations/` | `feat` 또는 `refactor` |
+| 2 | 비즈니스 로직 | `services/`, `repositories/`, `providers/` | `feat` 또는 `fix` |
+| 3 | UI/화면 | `screens/`, `widgets/`, `components/`, `*.tsx` | `feat` 또는 `fix` |
+| 4 | 테스트 | `test/`, `tests/`, `*.test.*`, `*.spec.*` | `test` |
+| 5 | 설정/문서 | `*.md`, `*.json`, `*.yaml`, `*.toml` | `docs` 또는 `chore` |
+
+**5-S-2. 그룹별 순차 커밋:**
+
+각 그룹에 대해:
+1. 해당 그룹의 파일만 `git add [파일들]`
+2. 그룹에 맞는 Conventional Commit 메시지 자동 생성
+3. `git commit -m "[type]: [그룹 설명]"`
+
+**5-S-3. 분할 결과 출력:**
+
+```
+분할 커밋 완료 (--split)
+─────────────────────────────────
+  커밋 1: feat: 사용자 엔티티 스키마 추가 (3 files)
+  커밋 2: feat: 인증 서비스 구현 (5 files)
+  커밋 3: feat: 로그인 화면 UI (4 files)
+  커밋 4: test: 인증 서비스 테스트 (2 files)
+  커밋 5: docs: API 문서 업데이트 (1 file)
+─────────────────────────────────
+  총 5개 커밋, 15개 파일
+```
+
+→ 6단계로 진행
 
 ---
 
@@ -670,6 +720,7 @@ Ready 전환:
 | `--no-checklist` | 머지 후 웹 체크리스트 생성 스킵 |
 | `--skip-security` | 보안 사전 검증 스킵 |
 | `--notify` | 머지 후 MCP 알림 발송 (v6 신규) |
+| `--split` | 분할 커밋 — 변경 파일을 논리 단위로 자동 분리 (GStack 패턴) |
 
 ## 사용 예시
 
