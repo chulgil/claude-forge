@@ -111,6 +111,17 @@ color: blue
 - Mutation patterns (MUST use immutable patterns)
 - Missing tests for new code
 
+### UX Compliance (HIGH) — lesson-app 및 Flutter 프로젝트
+- 하드코딩 색상: `Color(0x...)` 사용 → `AppColors` 상수 사용 강제
+- 하드코딩 폰트: `fontSize: N` 직접 → `AppTypography` 사용 강제
+- 하드코딩 간격: `EdgeInsets.all(N)` → `AppSpacing` 사용 강제
+- 공통 위젯 미사용: `core/widgets/`에 유사 위젯 있는데 새로 만든 경우
+- 3색 이상 semantic color 동시 사용 (시각적 과부하)
+- 중복 메뉴/설정: 같은 기능이 2곳 이상에서 접근 가능
+- 상세 화면 링크 누락: 리스트 아이템에 onTap 네비게이션 없음
+- 플레이스홀더 UI: 미구현 기능의 UI 요소가 존재 (NO-OP 버튼)
+- 중복 진입점: 한 섹션에 동일 기능 버튼 2개+
+
 ### Performance (MEDIUM)
 - Inefficient algorithms
 - Unnecessary re-renders in React
