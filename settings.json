@@ -1,286 +1,341 @@
 {
-  "cleanupPeriodDays": 14,
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "ENABLE_TOOL_SEARCH": "auto:5"
-  },
-  "permissions": {
-    "allow": [
-      "Bash(*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "Task(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Search(*)",
-      "Skill(*)",
-      "ToolSearch(*)",
-      "NotebookEdit(*)",
-      "WebSearch",
-      "WebSearch(*)",
-      "SendMessage(*)",
-      "TeamCreate(*)",
-      "TeamDelete(*)",
-      "TaskCreate(*)",
-      "TaskUpdate(*)",
-      "TaskGet(*)",
-      "TaskList(*)",
-      "TaskOutput(*)",
-      "TaskStop(*)",
-      "EnterPlanMode(*)",
-      "AskUserQuestion(*)",
-      "ListMcpResourcesTool(*)",
-      "ReadMcpResourceTool(*)",
-      "mcp__context7__*",
-      "mcp__exa__*",
-      "mcp__memory__*",
-      "mcp__github__*",
-      "mcp__fetch__*",
-      "mcp__jina-reader__*"
-    ],
-    "deny": [
-      "WebFetch",
-      "WebFetch(*)",
-      "Bash(rm -rf /)*",
-      "Bash(rm -rf ~)*",
-      "Bash(rm -rf .)*",
-      "Bash(rm -r .)*",
-      "Bash(rm -r ./)*",
-      "Bash(rm -rf *)*",
-      "Bash(sudo:*)",
-      "Bash(chmod 777:*)",
-      "Bash(>/dev/*)",
-      "Bash(curl*|*sh)*",
-      "Bash(wget*|*sh)*",
-      "Bash(*>~/.ssh/*)",
-      "Bash(*>~/.zshrc)*",
-      "Bash(*>~/.bashrc)*",
-      "Bash(*>~/.profile)*",
-      "Bash(*>~/.zprofile)*",
-      "Bash(git push --force*main)*",
-      "Bash(git push -f*main)*",
-      "Bash(git push --force*master)*",
-      "Bash(git push -f*master)*",
-      "Bash(git push --force-with-lease*main)*",
-      "Bash(git push --force-with-lease*master)*",
-      "Bash(git push origin +main)*",
-      "Bash(git push origin +master)*",
-      "Bash(git reset --hard origin/*)*",
-      "Bash(git clean -f*)*",
-      "Bash(git checkout -- .)*",
-      "Bash(git restore .)*",
-      "Bash(npm publish)*",
-      "Bash(pnpm publish)*",
-      "Bash(yarn publish)*",
-      "Bash(docker system prune)*",
-      "Bash(mkfs*)*",
-      "Bash(dd if=*)*",
-      "Bash(eval *)*",
-      "Bash(bash -c *)*",
-      "Bash(/bin/bash -c *)*",
-      "Bash(sh -c *)*",
-      "Bash(/bin/sh -c *)*",
-      "Bash(osascript*)*",
-      "Bash(/usr/bin/osascript*)*",
-      "Bash(crontab*)*",
-      "Bash(launchctl*)*",
-      "Bash(python3 -c *import os*)*",
-      "Bash(python3 -c *import subprocess*)*",
-      "Bash(python3 -c *import importlib*)*",
-      "Bash(python3 -c *__import__*)*",
-      "Bash(node -e *)*",
-      "Bash(/usr/local/bin/node -e *)*",
-      "Bash(perl -e *)*",
-      "Bash(/usr/bin/perl -e *)*",
-      "Bash(xargs *)*",
-      "Bash(open http*)*",
-      "Bash(source /dev/*)*"
-    ]
-  },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/remote-command-guard.sh",
-            "timeout": 5000
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/pre-push-security.sh",
-            "timeout": 15000
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/rate-limiter.sh",
-            "timeout": 5000
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/mcp-usage-tracker.sh"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/context-sync-suggest.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/forge-update-check.sh",
-            "timeout": 5000
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"/Users/r00360/.claude/hooks/gsd-check-update.js\""
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/work-tracker-prompt.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/work-tracker-tool.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/output-secret-filter.sh",
-            "timeout": 5000
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/skills/continuous-learning-v2/hooks/observe.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/code-quality-reminder.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/code-quality-reminder.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/security-auto-trigger.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"/Users/r00360/.claude/hooks/gsd-context-monitor.js\""
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/work-tracker-stop.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/session-wrap-suggest.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/notify.sh",
-            "timeout": 5000
-          }
-        ]
-      }
-    ],
-    "TaskCompleted": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/task-completed.sh",
-            "timeout": 10000
-          }
-        ]
-      }
-    ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/cc-chips-custom/engine.sh"
-  },
-  "enabledPlugins": {
-    "figma@claude-plugins-official": true,
-    "cli-anything@cli-anything": true
-  },
-  "extraKnownMarketplaces": {
-    "cli-anything": {
-      "source": {
-        "source": "github",
-        "repo": "HKUDS/CLI-Anything"
-      }
+    "cleanupPeriodDays": 30,
+    "env": {
+        "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+        "ENABLE_TOOL_SEARCH": "auto:5",
+        "DISABLE_TELEMETRY": "1",
+        "DISABLE_ERROR_REPORTING": "1",
+        "DISABLE_FEEDBACK": "1"
     },
-    "claude-plugins-official": {
-      "source": {
-        "source": "github",
-        "repo": "anthropics/claude-plugins-official"
-      }
-    }
-  }
+    "permissions": {
+        "allow": [
+            "Bash(*)",
+            "Read(*)",
+            "Write(*)",
+            "Edit(*)",
+            "Task(*)",
+            "Glob(*)",
+            "Grep(*)",
+            "Search(*)",
+            "Skill(*)",
+            "ToolSearch(*)",
+            "NotebookEdit(*)",
+            "WebSearch",
+            "WebSearch(*)",
+            "SendMessage(*)",
+            "TeamCreate(*)",
+            "TeamDelete(*)",
+            "TaskCreate(*)",
+            "TaskUpdate(*)",
+            "TaskGet(*)",
+            "TaskList(*)",
+            "TaskOutput(*)",
+            "TaskStop(*)",
+            "EnterPlanMode(*)",
+            "AskUserQuestion(*)",
+            "ListMcpResourcesTool(*)",
+            "ReadMcpResourceTool(*)",
+            "mcp__context7__*",
+            "mcp__exa__*",
+            "mcp__memory__*",
+            "mcp__github__*",
+            "mcp__fetch__*",
+            "mcp__jina-reader__*",
+            "mcp__pencil"
+        ],
+        "deny": [
+            "WebFetch",
+            "WebFetch(*)",
+            "Bash(rm -rf /)*",
+            "Bash(rm -rf ~)*",
+            "Bash(rm -rf .)*",
+            "Bash(rm -r .)*",
+            "Bash(rm -r ./)*",
+            "Bash(rm -rf *)*",
+            "Bash(sudo:*)",
+            "Bash(chmod 777:*)",
+            "Bash(>/dev/*)",
+            "Bash(curl*|*sh)*",
+            "Bash(wget*|*sh)*",
+            "Bash(*>~/.ssh/*)",
+            "Bash(*>~/.zshrc)*",
+            "Bash(*>~/.bashrc)*",
+            "Bash(*>~/.profile)*",
+            "Bash(*>~/.zprofile)*",
+            "Bash(git push --force*main)*",
+            "Bash(git push -f*main)*",
+            "Bash(git push --force*master)*",
+            "Bash(git push -f*master)*",
+            "Bash(git push --force-with-lease*main)*",
+            "Bash(git push --force-with-lease*master)*",
+            "Bash(git push origin +main)*",
+            "Bash(git push origin +master)*",
+            "Bash(git reset --hard origin/*)*",
+            "Bash(git clean -f*)*",
+            "Bash(git checkout -- .)*",
+            "Bash(git restore .)*",
+            "Bash(npm publish)*",
+            "Bash(pnpm publish)*",
+            "Bash(yarn publish)*",
+            "Bash(docker system prune)*",
+            "Bash(mkfs*)*",
+            "Bash(dd if=*)*",
+            "Bash(eval *)*",
+            "Bash(bash -c *)*",
+            "Bash(/bin/bash -c *)*",
+            "Bash(sh -c *)*",
+            "Bash(/bin/sh -c *)*",
+            "Bash(osascript*)*",
+            "Bash(/usr/bin/osascript*)*",
+            "Bash(crontab*)*",
+            "Bash(launchctl*)*",
+            "Bash(python3 -c *import os*)*",
+            "Bash(python3 -c *import subprocess*)*",
+            "Bash(python3 -c *import importlib*)*",
+            "Bash(python3 -c *__import__*)*",
+            "Bash(node -e *)*",
+            "Bash(/usr/local/bin/node -e *)*",
+            "Bash(perl -e *)*",
+            "Bash(/usr/bin/perl -e *)*",
+            "Bash(xargs *)*",
+            "Bash(open http*)*",
+            "Bash(source /dev/*)*"
+        ]
+    },
+    "model": "claude-opus-4-7",
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "Bash",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/remote-command-guard.sh",
+                        "timeout": 5000
+                    },
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/pre-push-security.sh",
+                        "timeout": 15000
+                    },
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/bash-guard.sh",
+                        "timeout": 5000
+                    }
+                ]
+            },
+            {
+                "matcher": "mcp__.*",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/rate-limiter.sh",
+                        "timeout": 5000
+                    }
+                ]
+            },
+            {
+                "matcher": "mcp__mssql.*__sql_query|mcp__saturn.*__sql_query|mcp__mars.*__sql_query",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/db-guard.sh",
+                        "timeout": 5000
+                    }
+                ]
+            },
+            {
+                "matcher": "mcp__playwright__.*|mcp__hyperbrowser__.*",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/expensive-mcp-warning.sh",
+                        "timeout": 3000
+                    }
+                ]
+            }
+        ],
+        "SessionStart": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/context-sync-suggest.sh"
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/forge-update-check.sh",
+                        "timeout": 5000
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/session-reset-counter.sh",
+                        "timeout": 3000
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node \"/Users/r00360/.claude/hooks/gsd-check-update.js\""
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/harness-audit-reminder.sh",
+                        "timeout": 3000
+                    }
+                ]
+            }
+        ],
+        "UserPromptSubmit": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/work-tracker-prompt.sh"
+                    },
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/harness-signal-capture.sh",
+                        "timeout": 3000
+                    }
+                ]
+            }
+        ],
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/code-quality-reminder.sh"
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/output-secret-filter.sh",
+                        "timeout": 5000
+                    }
+                ]
+            },
+            {
+                "matcher": "Edit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/security-auto-trigger.sh"
+                    }
+                ]
+            },
+            {
+                "matcher": "Edit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/post-write-lint.sh",
+                        "timeout": 10000
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/context-monitor.sh",
+                        "timeout": 3000
+                    }
+                ]
+            }
+        ],
+        "Stop": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/work-tracker-stop.sh"
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/persistent-workflow.sh",
+                        "timeout": 3000
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/session-wrap-suggest.sh"
+                    }
+                ]
+            },
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/notify.sh",
+                        "timeout": 5000
+                    }
+                ]
+            }
+        ],
+        "TaskCompleted": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/task-completed.sh",
+                        "timeout": 10000
+                    }
+                ]
+            }
+        ]
+    },
+    "statusLine": {
+        "type": "command",
+        "command": "~/.claude/cc-chips-custom/engine.sh"
+    },
+    "enabledPlugins": {
+        "figma@claude-plugins-official": true,
+        "cli-anything@cli-anything": true,
+        "superpowers@claude-plugins-official": true
+    },
+    "extraKnownMarketplaces": {
+        "cli-anything": {
+            "source": {
+                "source": "github",
+                "repo": "HKUDS/CLI-Anything"
+            }
+        },
+        "claude-plugins-official": {
+            "source": {
+                "source": "github",
+                "repo": "anthropics/claude-plugins-official"
+            }
+        }
+    },
+    "autoMemoryEnabled": true,
+    "autoDreamEnabled": true
 }
